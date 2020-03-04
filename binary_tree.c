@@ -16,6 +16,7 @@ struct Node{
   */
   int key;                  //represents the data we want to store, in this case, it's an integer.
   struct Node *left,*right; // pointes that link to other nodes .
+  int height;// Stores the node height value, it will help in the process of balancing the tree.
 };
 
 //Definition of the functions that will be used in the program
@@ -27,7 +28,14 @@ bool search(struct Node* root_node,int key);// Function to check whether an elem
 void cleanTree(struct Node** root_node);// Function to free the memory allocated for the tree.
 int findMinimum(struct Node* root_node); // Find the minimum value in the binary search tree.
 int findMaximum(struct Node* root_node);// Find the maximum value in the binary search tree.
+int getmax(int a, int b);  // Utility function to obtain the maximum value between two numbers
 int height(struct Node* root_node); // Function to find the height of a node.
+struct Node* rotateRight(struct Node* x);
+struct Node* rotateLeft(struct Node* y);
+struct Node* rr(struct Node* root_node);
+struct Node* ll(struct Node* root_node);
+struct Node* rl(struct Node* root_node);
+struct Node* lr(struct Node* root_node);
 
 ///////////////////////////////////////////////////////
 
@@ -74,6 +82,7 @@ struct Node* createNode(int new_key){
   struct Node* temp = (struct Node*)malloc(sizeof(struct Node)); // temporary variable to help to allocate the memory
   temp->key = new_key;      // Store the data
   temp->right = temp->left = NULL; // new node do not have childs at first moment
+  temp->height = 0; // leaf node height is zero .
   return temp; // return the new node
 }
 
@@ -170,6 +179,13 @@ int findMaximum(struct Node* root_node){
 
 ///////////////////////////////////////////////////////
 
+int getmax(int a, int b){
+  // function to get the maximum value between two numbers
+  return (a > b)? a : b; //ternary operator
+  // Syntax: (Condition)?true_value:false_value
+}
+///////////////////////////////////////////////////////
+
 int height(struct Node*root_node){
   // I will use the definition of the height of a node as the number of edges on the longest path from the node to a leaf.
   // Some people define height as the number of nodes on that path.
@@ -182,10 +198,76 @@ int height(struct Node*root_node){
     int leftH  = height(root_node->left); // height of the left subtree.
     // We must obtain the maximum value between these two heights.
     // The height of the input node will be equal to the maximum value plus 1.
-    if (rightH >= leftH) {
-      return (rightH + 1);
-    }else{
-      return (leftH + 1);
-    }
+    return (getmax(rightH,leftH) + 1);
   }
 }
+
+///////////////////////////////////////////////////////
+
+//ROTATIONS
+
+struct Node* rotateRight(struct Node* x){
+
+  struct Node* y; //auxiliary variable to help reorganize Links.
+  y = x->left;
+  x->left = y->right;
+  y->right = x;
+  // Updating the heights og the subtrees
+  x->height = height(x);
+  y->height = height(y);
+
+  return y; // y is the new root after the rotation.
+}
+
+struct Node* rotateLeft(struct Node* y){
+
+  struct Node* x; //auxiliary variable to help reorganize Links.
+  x = y->right;
+  y->right = x->left;
+  x->left = y;
+  // Updating the heights og the subtrees
+  x->height = height(x);
+  y->height = height(y);
+
+  return x; // x is the new root after the rotation.
+}
+
+///////////////////////////////////////////////////////
+
+//Cases for Simple or Double ROTATIONS
+
+// Unbalanced RightRight
+
+struct Node* rr(struct Node* root_node){
+  //Simple Rotation
+  root_node = rotateLeft(root_node);
+  return root_node;
+}
+
+// Unbalanced LeftLeft
+
+struct Node* ll(struct Node* root_node){
+  //Simple Rotation
+  root_node = rotateRight(root_node);
+  return root_node;
+}
+
+// Unbalanced LeftRight
+
+struct Node* lr(struct Node* root_node){
+  // Double Rotation
+  root_node->left = rotateLeft(root_node->left);
+  root_node = rotateRight(root_node);
+  return root_node;
+}
+
+// Unbalanced RightLeft
+
+struct Node* rl(struct Node* root_node){
+  // Double Rotation
+  root_node->right = rotateLeft(root_node->right);
+  root_node = rotateLeft(root_node);
+  return root_node;
+}
+
+///////////////////////////////////////////////////////
