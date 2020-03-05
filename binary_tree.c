@@ -30,12 +30,19 @@ int findMinimum(struct Node* root_node); // Find the minimum value in the binary
 int findMaximum(struct Node* root_node);// Find the maximum value in the binary search tree.
 int getmax(int a, int b);  // Utility function to obtain the maximum value between two numbers
 int height(struct Node* root_node); // Function to find the height of a node.
-struct Node* rotateRight(struct Node* x);
+
+//Functions to balance the tree
+
+struct Node* rotateRight(struct Node* x); // Function to execute right rotation
 struct Node* rotateLeft(struct Node* y);
 struct Node* rr(struct Node* root_node);
 struct Node* ll(struct Node* root_node);
 struct Node* rl(struct Node* root_node);
 struct Node* lr(struct Node* root_node);
+int balanceFactor(struct Node* root_node);
+
+//Functions to print the tree
+
 
 ///////////////////////////////////////////////////////
 
@@ -68,6 +75,9 @@ int main(int argc, char const *argv[]) {
   printf("Minimun value : %d \n",min);
   int max = findMaximum(root);
   printf("Maximum value : %d \n",max);
+  root = insert(root, 11); // creating an imbalance
+  min = findMinimum(root);
+  printf("Minimun value : %d \n",min);
   cleanTree(&root);
   min = findMinimum(root);
   printf("Minimun value : %d \n",min);
@@ -93,9 +103,11 @@ to solve problems in our functions
 */
 struct Node* insert(struct Node* root_node,int new_key){
 
+  //Inserting the new element
   if (root_node == NULL) {
     // In the case that the tree is empty:
     root_node = createNode(new_key);
+    return root_node;
   }else if (new_key <= root_node->key) {
     // In this case, the value of the new element is less than the value at the root.
     // Therefore, we must place them in the left subtree.
@@ -105,6 +117,26 @@ struct Node* insert(struct Node* root_node,int new_key){
     // Therefore, we must place them in the right subtree.
     root_node->right = insert(root_node->right,new_key);
   }
+
+  // Updating the height of the tree
+  root_node->height = height(root_node);
+
+  //Check whether the tree is unbalanced or not. We need to check the reason for the imbalance.
+  //After finding the right case, we apply the right type of rotation
+  if ((balanceFactor(root_node) > 1) && (new_key < root_node->left->key)) {
+    //LeftLeft Case
+    root_node = ll(root_node);
+  }else if ((balanceFactor(root_node) > 1) && (new_key > root_node->left->key)) {
+    //LeftRight Case
+    root_node = lr(root_node);
+  }else if ((balanceFactor(root_node) < -1) && (new_key > root_node->right->key)) {
+    //RightRight Case
+    root_node = rr(root_node);
+  }else if ((balanceFactor(root_node) < -1) && (new_key < root_node->right->key)) {
+      //Rightleft Case
+      root_node = rl(root_node);
+  }
+
   return root_node;
 }
 
@@ -208,10 +240,12 @@ int height(struct Node*root_node){
 
 struct Node* rotateRight(struct Node* x){
 
-  struct Node* y; //auxiliary variable to help reorganize Links.
+  struct Node *y,*t2; //auxiliary variable to help reorganize Links.
   y = x->left;
-  x->left = y->right;
+  t2 = y->right;// t2 is a generic subtree
+  //Rotation
   y->right = x;
+  x->left = t2;
   // Updating the heights og the subtrees
   x->height = height(x);
   y->height = height(y);
@@ -221,11 +255,13 @@ struct Node* rotateRight(struct Node* x){
 
 struct Node* rotateLeft(struct Node* y){
 
-  struct Node* x; //auxiliary variable to help reorganize Links.
+  struct Node *x,*t2; //auxiliary variable to help reorganize Links.
   x = y->right;
-  y->right = x->left;
+  t2 = x->left; // t2 is a generic subtree
+  //Rotation
   x->left = y;
-  // Updating the heights og the subtrees
+  y->right = t2;
+  // Updating the heights of the subtrees
   x->height = height(x);
   y->height = height(y);
 
@@ -240,16 +276,15 @@ struct Node* rotateLeft(struct Node* y){
 
 struct Node* rr(struct Node* root_node){
   //Simple Rotation
-  root_node = rotateLeft(root_node);
-  return root_node;
+  return rotateLeft(root_node);
+
 }
 
 // Unbalanced LeftLeft
 
 struct Node* ll(struct Node* root_node){
   //Simple Rotation
-  root_node = rotateRight(root_node);
-  return root_node;
+  return rotateRight(root_node);
 }
 
 // Unbalanced LeftRight
@@ -271,3 +306,14 @@ struct Node* rl(struct Node* root_node){
 }
 
 ///////////////////////////////////////////////////////
+
+int balanceFactor(struct Node* root_node){
+  if(root_node == NULL){
+    // Empty tree or leaf node
+    return 0;
+  }else{
+    return (height(root_node->left) - height(root_node->right));
+    // The balance factor is the difference between the height
+    // of the left subtree nd the right subtree
+  }
+}
