@@ -42,7 +42,9 @@ struct Node* lr(struct Node* root_node);
 int balanceFactor(struct Node* root_node);
 
 //Functions to print the tree
-
+void preorder(struct Node* root_node);
+void inorder(struct Node* root_node);
+void postorder(struct Node* root_node);
 
 ///////////////////////////////////////////////////////
 
@@ -76,8 +78,17 @@ int main(int argc, char const *argv[]) {
   int max = findMaximum(root);
   printf("Maximum value : %d \n",max);
   root = insert(root, 11); // creating an imbalance
-  min = findMinimum(root);
-  printf("Minimun value : %d \n",min);
+  root = insert(root,9);
+  root = insert(root,60);
+  root = insert(root,45);
+  // testing the print functions
+  preorder(root);
+  printf("\n");
+  inorder(root);
+  printf("\n");
+  postorder(root);
+  printf("\n");
+
   cleanTree(&root);
   min = findMinimum(root);
   printf("Minimun value : %d \n",min);
@@ -300,7 +311,7 @@ struct Node* lr(struct Node* root_node){
 
 struct Node* rl(struct Node* root_node){
   // Double Rotation
-  root_node->right = rotateLeft(root_node->right);
+  root_node->right = rotateRight(root_node->right);
   root_node = rotateLeft(root_node);
   return root_node;
 }
@@ -315,5 +326,44 @@ int balanceFactor(struct Node* root_node){
     return (height(root_node->left) - height(root_node->right));
     // The balance factor is the difference between the height
     // of the left subtree nd the right subtree
+  }
+}
+
+///////////////////////////////////////////////////////
+
+void preorder(struct Node* root_node) {
+  //Base case to stop the recursion.
+  if (root_node == NULL) {
+    return;
+  }else{
+    printf(" %d ",root_node->key );// First we access the data stored in the node.
+    preorder(root_node->left);// After we visit all the elements in the left subtree.
+    preorder(root_node->right);// Then we visit the right subtree.
+  }
+}
+
+///////////////////////////////////////////////////////
+
+void inorder(struct Node* root_node) {
+  //Base case to stop the recursion.
+  if (root_node == NULL) {
+    return;
+  }else{
+    inorder(root_node->left);// First we visit all the elements in the left subtree.
+    printf(" %d ",root_node->key );// After we access the data stored in the root.
+    inorder(root_node->right);// Then we visit the right subtree.
+  }
+}
+
+///////////////////////////////////////////////////////
+
+void postorder(struct Node* root_node) {
+  //Base case to stop the recursion.
+  if (root_node == NULL) {
+    return;
+  }else{
+    postorder(root_node->left);// First we visit all the elements in the left subtree.
+    postorder(root_node->right);// After we visit the right subtree.
+    printf(" %d ",root_node->key );// Then we access the data stored in the root.
   }
 }
