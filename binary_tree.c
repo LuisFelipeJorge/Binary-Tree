@@ -24,22 +24,23 @@ struct Node{
 
 struct Node* createNode(int new_key); // Function to allocate extra memory for a new node.
 struct Node* insert(struct Node* root_node,int new_key); // Function to insert a new element in the tree.
+struct Node* delete(struct Node* root_node,int key);// Function to remove an element from the tree.
 bool search(struct Node* root_node,int key);// Function to check whether an element is present in the tree or not.
 void cleanTree(struct Node** root_node);// Function to free the memory allocated for the tree.
 int findMinimum(struct Node* root_node); // Find the minimum value in the binary search tree.
 int findMaximum(struct Node* root_node);// Find the maximum value in the binary search tree.
-int getmax(int a, int b);  // Utility function to obtain the maximum value between two numbers
+int getmax(int a, int b);  // Utility function to obtain the maximum value between two numbers.
 int height(struct Node* root_node); // Function to find the height of a node.
 
 //Functions to balance the tree
 
-struct Node* rotateRight(struct Node* x); // Function to execute right rotation
-struct Node* rotateLeft(struct Node* y);
-struct Node* rr(struct Node* root_node);
-struct Node* ll(struct Node* root_node);
-struct Node* rl(struct Node* root_node);
-struct Node* lr(struct Node* root_node);
-int balanceFactor(struct Node* root_node);
+struct Node* rotateRight(struct Node* x); // Function to execute right rotation.
+struct Node* rotateLeft(struct Node* y); // Function to execute left rotation.
+struct Node* rr(struct Node* root_node);// Function to execute double right rotation.
+struct Node* ll(struct Node* root_node);// Function to execute double left rotation.
+struct Node* rl(struct Node* root_node);// Function to execute double right left rotation.
+struct Node* lr(struct Node* root_node);// Function to execute double left right rotation.
+int balanceFactor(struct Node* root_node); // Funtion to get the balance factor of a node.
 
 //Functions to print the tree
 void preorder(struct Node* root_node);
@@ -81,12 +82,18 @@ int main(int argc, char const *argv[]) {
   root = insert(root,9);
   root = insert(root,60);
   root = insert(root,45);
+
   // testing the print functions
   preorder(root);
   printf("\n");
   inorder(root);
   printf("\n");
   postorder(root);
+  printf("\n");
+
+  //testing the delete function
+  root = delete(root,25);
+  inorder(root);
   printf("\n");
 
   cleanTree(&root);
@@ -366,4 +373,74 @@ void postorder(struct Node* root_node) {
     postorder(root_node->right);// After we visit the right subtree.
     printf(" %d ",root_node->key );// Then we access the data stored in the root.
   }
+}
+
+///////////////////////////////////////////////////////
+
+struct Node* delete(struct Node* root_node,int key){
+  // First, we need to perform a standard BST deletion
+  if (root_node == NULL) {
+    // Empty tree
+    return root_node;
+  }
+  //If the value of the key we want to delete is less than the value of the current key on the root node,
+  // we must look in the left subtree.
+  if (key < root_node->key) {
+    root_node->left = delete(root_node->left,key);
+  }else if (key > root_node->key) {
+    //If the value of the key we want to delete is greater than the value of the current key on the root node,
+    // we must look in the right subtree.
+    root_node->right = delete(root_node->right,key);
+  }else{
+    // root->key == key , we find the element
+      // We must discover if node has children.
+      if ((root_node->left == NULL) || (root_node->right == NULL)){
+        struct Node* temp = (root_node->left)? (root_node->left):(root_node->right);
+        // Syntax: (Condition)?true_value:false_value
+        // temp helps to change the reference of the node to be deleted
+        if (temp == NULL) {// NO child case
+          temp = root_node;
+          root_node = NULL;
+        }else{
+          // One child case
+          *root_node = *temp; // pass the reference of the non-empty child
+          free(temp);
+        }
+      }else{
+        // two children case, we should replace the deleted node
+        // by the rightmost element of the left subtree
+        // or
+        // by the leftmost element of the right subtree
+        struct Node *temp;
+        temp = root_node->left; // I choose the leftmost element of the right subtree
+        while (temp->right != NULL) {
+          temp = temp->right;
+        }
+        // copy the element to be repalced
+        root_node->key = temp->key;
+        root_node->right = delete(root_node->right,temp->key);
+      }
+  }
+  // If the tree has only one node
+  if (root_node == NULL) {
+    return root_node;
+  }
+  // Upadate the height of the root node
+  root_node->height = (height(root_node) + 1);
+  // Thus we verifies whether the current node is unbalanced or not and then rotate correctly to correct.
+  if ((balanceFactor(root_node) > 1) && (root_node->key < root_node->left->key)) {
+    //LeftLeft Case
+    root_node = ll(root_node);
+  }else if ((balanceFactor(root_node) > 1) && (root_node->key > root_node->left->key)) {
+    //LeftRight Case
+    root_node = lr(root_node);
+  }else if ((balanceFactor(root_node) < -1) && (root_node->key > root_node->right->key)) {
+    //RightRight Case
+    root_node = rr(root_node);
+  }else if ((balanceFactor(root_node) < -1) && (root_node->key < root_node->right->key)) {
+      //Rightleft Case
+      root_node = rl(root_node);
+  }
+
+  return root_node;
 }
