@@ -3,6 +3,7 @@
 #include <stdbool.h> // Allow us to work with boolean type
 #include <limits.h> // contains the INT_MIN value.
 
+
 //Definition of the data structure
 ///////////////////////////////////////////////////////
 struct Node{
@@ -18,6 +19,7 @@ struct Node{
   struct Node *left,*right; // pointes that link to other nodes .
   int height;// Stores the node height value, it will help in the process of balancing the tree.
 };
+
 
 //Definition of the functions that will be used in the program
 ///////////////////////////////////////////////////////
@@ -74,14 +76,15 @@ int main(int argc, char const *argv[]) {
   }else{
     printf("Element not found\n");
   }
-  int min = findMinimum(root);
-  printf("Minimun value : %d \n",min);
-  int max = findMaximum(root);
-  printf("Maximum value : %d \n",max);
+
   root = insert(root, 11); // creating an imbalance
   root = insert(root,9);
   root = insert(root,60);
   root = insert(root,45);
+  root = insert(root,29);
+  root = insert(root,28);
+  root = insert(root,16);
+  root = insert(root,18);
 
   // testing the print functions
   preorder(root);
@@ -91,9 +94,28 @@ int main(int argc, char const *argv[]) {
   postorder(root);
   printf("\n");
 
+  int min = findMinimum(root);
+  printf("Minimun value : %d \n",min);
+  int max = findMaximum(root);
+  printf("Maximum value : %d \n",max);
+
   //testing the delete function
+  printf("\n");
   root = delete(root,25);
+  preorder(root);
+  printf("\n");
   inorder(root);
+  printf("\n");
+  postorder(root);
+  printf("\n");
+
+  printf("\n");
+  root = delete(root,30);
+  preorder(root);
+  printf("\n");
+  inorder(root);
+  printf("\n");
+  postorder(root);
   printf("\n");
 
   cleanTree(&root);
@@ -412,13 +434,13 @@ struct Node* delete(struct Node* root_node,int key){
         // or
         // by the leftmost element of the right subtree
         struct Node *temp;
-        temp = root_node->left; // I choose the leftmost element of the right subtree
+        temp = root_node->left; // I choose the rightmost element of the left subtree
         while (temp->right != NULL) {
           temp = temp->right;
         }
         // copy the element to be repalced
         root_node->key = temp->key;
-        root_node->right = delete(root_node->right,temp->key);
+        root_node->left = delete(root_node->left,temp->key);
       }
   }
   // If the tree has only one node
