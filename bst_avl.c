@@ -1,12 +1,11 @@
 #include <stdio.h> //Standard header for C language.
 #include <stdlib.h>// Contains functions as malloc, that help to dynamically allocate the memory.
 #include <stdbool.h> // Allow us to work with boolean type
-//#include <limits.h> // contains the INT_MIN value.
+#include <limits.h> // contains the INT_MIN value.
 #include "bst_avl.h"
 
 //Definition of the data structure
 ///////////////////////////////////////////////////////
-/*
 struct Node{
   /*
   A binary tree is made up of nodes that carry three pieces of information.
@@ -15,121 +14,14 @@ struct Node{
          *****************       The middle cell stores the data that we want to save
     <----*ptr* Data * ptr*---->  the others cells stores the pointers that represent the links
          *****************       other nodes.
-  *
+  */
   int key;                  //represents the data we want to store, in this case, it's an integer.
   struct Node *left,*right; // pointes that link to other nodes .
   int height;// Stores the node height value, it will help in the process of balancing the tree.
 };
-*/
-
-
-//Definition of the functions that will be used in the program
-///////////////////////////////////////////////////////
-/*
-struct Node* createNode(int new_key); // Function to allocate extra memory for a new node.
-struct Node* insert(struct Node* root_node,int new_key); // Function to insert a new element in the tree.
-struct Node* delete(struct Node* root_node,int key);// Function to remove an element from the tree.
-bool search(struct Node* root_node,int key);// Function to check whether an element is present in the tree or not.
-void cleanTree(struct Node** root_node);// Function to free the memory allocated for the tree.
-int findMinimum(struct Node* root_node); // Find the minimum value in the binary search tree.
-int findMaximum(struct Node* root_node);// Find the maximum value in the binary search tree.
-int getmax(int a, int b);  // Utility function to obtain the maximum value between two numbers.
-int height(struct Node* root_node); // Function to find the height of a node.
-
-//Functions to balance the tree
-
-struct Node* rotateRight(struct Node* x); // Function to execute right rotation.
-struct Node* rotateLeft(struct Node* y); // Function to execute left rotation.
-struct Node* rr(struct Node* root_node);// Function to execute double right rotation.
-struct Node* ll(struct Node* root_node);// Function to execute double left rotation.
-struct Node* rl(struct Node* root_node);// Function to execute double right left rotation.
-struct Node* lr(struct Node* root_node);// Function to execute double left right rotation.
-int balanceFactor(struct Node* root_node); // Funtion to get the balance factor of a node.
-
-//Functions to print the tree
-void preorder(struct Node* root_node);
-void inorder(struct Node* root_node);
-void postorder(struct Node* root_node);
-*/
-///////////////////////////////////////////////////////
-
-int main(int argc, char const *argv[]) {
-  struct Node* root = NULL;
-  int h = height(root);
-  printf("height : %d \n",h);
-  root = insert(root,25);
-  root = insert(root,15);
-  root = insert(root,30);
-  h = height(root);
-  printf("height : %d \n",h);
-  root = insert(root,12);
-  root = insert(root,20);
-  root = insert(root,27);
-  root = insert(root,33);
-  h = height(root);
-  printf("height : %d \n",h);
-    if (search(root,33)) {
-    printf("Element found \n");
-  }else{
-    printf("Element not found\n");
-  }
-  if (search(root,50)) {
-    printf("Element found \n");
-  }else{
-    printf("Element not found\n");
-  }
-
-  root = insert(root, 11); // creating an imbalance
-  root = insert(root,9);
-  root = insert(root,60);
-  root = insert(root,45);
-  root = insert(root,29);
-  root = insert(root,28);
-  root = insert(root,16);
-  root = insert(root,18);
-
-  // testing the print functions
-  preorder(root);
-  printf("\n");
-  inorder(root);
-  printf("\n");
-  postorder(root);
-  printf("\n");
-
-  int min = findMinimum(root);
-  printf("Minimun value : %d \n",min);
-  int max = findMaximum(root);
-  printf("Maximum value : %d \n",max);
-
-  //testing the delete function
-  printf("\n");
-  root = delete(root,25);
-  preorder(root);
-  printf("\n");
-  inorder(root);
-  printf("\n");
-  postorder(root);
-  printf("\n");
-
-  printf("\n");
-  root = delete(root,30);
-  preorder(root);
-  printf("\n");
-  inorder(root);
-  printf("\n");
-  postorder(root);
-  printf("\n");
-
-  cleanTree(&root);
-  min = findMinimum(root);
-  printf("Minimun value : %d \n",min);
-  max = findMaximum(root);
-  printf("Maximum value : %d \n",max);
-  return 0;
-}
 
 ///////////////////////////////////////////////////////
-/*
+
 struct Node* createNode(int new_key){
   struct Node* temp = (struct Node*)malloc(sizeof(struct Node)); // temporary variable to help to allocate the memory
   temp->key = new_key;      // Store the data
@@ -142,7 +34,7 @@ struct Node* createNode(int new_key){
 /*
 Binary trees are recursive structures, so we will generally choose this approach
 to solve problems in our functions
-*
+*/
 struct Node* insert(struct Node* root_node,int new_key){
 
   //Inserting the new element
@@ -468,4 +360,3 @@ struct Node* delete(struct Node* root_node,int key){
 
   return root_node;
 }
-*/
