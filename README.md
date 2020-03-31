@@ -17,6 +17,6 @@ We can correct the imbalance in a given node by the "rotations" of its subtrees.
 * Right-Left rotation
 
 
-You can see a quick explanation on wikipedia [Wiki](https://en.wikipedia.org/wiki/AVL_tree#Simple_rotation)e also in the function file, where I specified the right time to execute any of them. If you have a lot of curiosity and patience, this long video calmly explains each situation [Youtube](https://www.youtube.com/watch?v=TbvhGcf6UJU).
+You can see a quick explanation on wikipedia [Wiki](https://en.wikipedia.org/wiki/AVL_tree#Simple_rotation) and also in the function file, where I specified the right time to execute any of them. If you have a lot of curiosity and patience, this long video calmly explains each situation [Youtube](https://www.youtube.com/watch?v=TbvhGcf6UJU).
 
 By applying the corrections, it is possible to guarantee an *O(nlogn)* time complexity in the search process, adding this feature to the *O(1)* complexity to insert and remove elements. We can see why binary search trees have become important data structures that deserve to be understood.
