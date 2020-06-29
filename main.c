@@ -1,15 +1,12 @@
-#include <stdio.h> //Standard header for C language.
-#include <stdlib.h>// Contains functions as malloc, that help to dynamically allocate the memory.
-#include <stdbool.h> // Allow us to work with boolean type
-//#include <limits.h> // contains the INT_MIN value.
-#include "bst_avl.h"
+#include "avlTree.h"
 
-///////////////////////////////////////////////////////
-
-int main(int argc, char const *argv[]) {
-  struct Node* root = NULL;
+int main(int argc, char const *argv[]){
+  
+  Node* root = NULL;
+  ////////////////////////////////
+  // Testing height
   int h = height(root);
-  printf("height : %d \n",h);
+  printf("height : %d \n",h);  
   root = insert(root,25);
   root = insert(root,15);
   root = insert(root,30);
@@ -21,7 +18,10 @@ int main(int argc, char const *argv[]) {
   root = insert(root,33);
   h = height(root);
   printf("height : %d \n",h);
-    if (search(root,33)) {
+
+  ////////////////////////////////
+  // Testing search()
+  if (search(root,33)) {
     printf("Element found \n");
   }else{
     printf("Element not found\n");
@@ -32,7 +32,9 @@ int main(int argc, char const *argv[]) {
     printf("Element not found\n");
   }
 
-  root = insert(root, 11); // creating an imbalance
+  ////////////////////////////////
+  // Testing imbalance
+  root = insert(root, 11); // Creating an imbalance
   root = insert(root,9);
   root = insert(root,60);
   root = insert(root,45);
@@ -41,7 +43,8 @@ int main(int argc, char const *argv[]) {
   root = insert(root,16);
   root = insert(root,18);
 
-  // testing the print functions
+  ////////////////////////////////
+  // Testing print functions
   preorder(root);
   printf("\n");
   inorder(root);
@@ -49,14 +52,17 @@ int main(int argc, char const *argv[]) {
   postorder(root);
   printf("\n");
 
+  ////////////////////////////////
+  // Testing the functions to find maximum and minimum values 
   int min = findMinimum(root);
   printf("Minimun value : %d \n",min);
   int max = findMaximum(root);
   printf("Maximum value : %d \n",max);
 
-  //testing the delete function
+  ////////////////////////////////
+  // Testing the delete function
   printf("\n");
-  root = delete(root,25);
+  root = deleteNode(root,25);
   preorder(root);
   printf("\n");
   inorder(root);
@@ -65,7 +71,7 @@ int main(int argc, char const *argv[]) {
   printf("\n");
 
   printf("\n");
-  root = delete(root,30);
+  root = deleteNode(root,30);
   preorder(root);
   printf("\n");
   inorder(root);
@@ -73,11 +79,13 @@ int main(int argc, char const *argv[]) {
   postorder(root);
   printf("\n");
 
+  ////////////////////////////////
+  // Free the memory allocated
   cleanTree(&root);
   min = findMinimum(root);
   printf("Minimun value : %d \n",min);
   max = findMaximum(root);
   printf("Maximum value : %d \n",max);
+  
   return 0;
 }
-

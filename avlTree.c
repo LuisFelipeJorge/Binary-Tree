@@ -1,29 +1,12 @@
-#include <stdio.h> //Standard header for C language.
-#include <stdlib.h>// Contains functions as malloc, that help to dynamically allocate the memory.
-#include <stdbool.h> // Allow us to work with boolean type
-#include <limits.h> // contains the INT_MIN value.
-#include "bst_avl.h"
+// Import the header file
 
-//Definition of the data structure
-///////////////////////////////////////////////////////
-struct Node{
-  /*
-  A binary tree is made up of nodes that carry three pieces of information.
-  Data and 2 pointers for other nodes.
-  We could see the nodes as cells with sub-divisions
-         *****************       The middle cell stores the data that we want to save
-    <----*ptr* Data * ptr*---->  the others cells stores the pointers that represent the links
-         *****************       other nodes.
-  */
-  int key;                  //represents the data we want to store, in this case, it's an integer.
-  struct Node *left,*right; // pointes that link to other nodes .
-  int height;// Stores the node height value, it will help in the process of balancing the tree.
-};
+#include "avlTree.h"
 
+// Functions Definitions
 ///////////////////////////////////////////////////////
 
-struct Node* createNode(int new_key){
-  struct Node* temp = (struct Node*)malloc(sizeof(struct Node)); // temporary variable to help to allocate the memory
+Node* createNode(int new_key){
+  Node* temp = (Node*)malloc(sizeof(Node)); // temporary variable to help to allocate the memory
   temp->key = new_key;      // Store the data
   temp->right = temp->left = NULL; // new node do not have childs at first moment
   temp->height = 0; // leaf node height is zero .
@@ -35,7 +18,7 @@ struct Node* createNode(int new_key){
 Binary trees are recursive structures, so we will generally choose this approach
 to solve problems in our functions
 */
-struct Node* insert(struct Node* root_node,int new_key){
+Node* insert(Node* root_node,int new_key){
 
   //Inserting the new element
   if (root_node == NULL) {
@@ -76,7 +59,7 @@ struct Node* insert(struct Node* root_node,int new_key){
 
 ///////////////////////////////////////////////////////
 
-bool search(struct Node* root_node,int key){
+bool search(Node* root_node,int key){
 
   if (root_node == NULL ) {
     // Base case: the element does not belong to the tree or the tree is empty.
@@ -95,11 +78,11 @@ bool search(struct Node* root_node,int key){
 
 ///////////////////////////////////////////////////////
 
-void cleanTree(struct Node** root_node){
+void cleanTree(Node** root_node){
   if (*root_node == NULL) { // Empty tree
     return; // Do nothing
   }else{
-    struct Node *aux = (*root_node);
+    Node *aux = (*root_node);
     // Delete the subtrees
     cleanTree(&aux->left);
     cleanTree(&aux->right);
@@ -110,7 +93,7 @@ void cleanTree(struct Node** root_node){
 
 ///////////////////////////////////////////////////////
 
-int findMinimum(struct Node* root_node){
+int findMinimum(Node* root_node){
 
   if (root_node == NULL) {
     printf("Empty Tree\n");
@@ -127,7 +110,7 @@ int findMinimum(struct Node* root_node){
 
 ///////////////////////////////////////////////////////
 
-int findMaximum(struct Node* root_node){
+int findMaximum(Node* root_node){
 
   if (root_node == NULL) {
     printf("Empty Tree\n");
@@ -152,7 +135,7 @@ int getmax(int a, int b){
 }
 ///////////////////////////////////////////////////////
 
-int height(struct Node*root_node){
+int height(Node*root_node){
   // I will use the definition of the height of a node as the number of edges on the longest path from the node to a leaf.
   // Some people define height as the number of nodes on that path.
   // This will only make a difference when we define the base case for our recursive approach.
@@ -172,9 +155,9 @@ int height(struct Node*root_node){
 
 //ROTATIONS
 
-struct Node* rotateRight(struct Node* x){
+Node* rotateRight(Node* x){
 
-  struct Node *y,*t2; //auxiliary variable to help reorganize Links.
+  Node *y,*t2; //auxiliary variable to help reorganize Links.
   y = x->left;
   t2 = y->right;// t2 is a generic subtree
   //Rotation
@@ -187,9 +170,9 @@ struct Node* rotateRight(struct Node* x){
   return y; // y is the new root after the rotation.
 }
 
-struct Node* rotateLeft(struct Node* y){
+Node* rotateLeft(Node* y){
 
-  struct Node *x,*t2; //auxiliary variable to help reorganize Links.
+  Node *x,*t2; //auxiliary variable to help reorganize Links.
   x = y->right;
   t2 = x->left; // t2 is a generic subtree
   //Rotation
@@ -208,7 +191,7 @@ struct Node* rotateLeft(struct Node* y){
 
 // Unbalanced RightRight
 
-struct Node* rr(struct Node* root_node){
+Node* rr(Node* root_node){
   //Simple Rotation
   return rotateLeft(root_node);
 
@@ -216,14 +199,14 @@ struct Node* rr(struct Node* root_node){
 
 // Unbalanced LeftLeft
 
-struct Node* ll(struct Node* root_node){
+Node* ll(Node* root_node){
   //Simple Rotation
   return rotateRight(root_node);
 }
 
 // Unbalanced LeftRight
 
-struct Node* lr(struct Node* root_node){
+Node* lr(Node* root_node){
   // Double Rotation
   root_node->left = rotateLeft(root_node->left);
   root_node = rotateRight(root_node);
@@ -232,7 +215,7 @@ struct Node* lr(struct Node* root_node){
 
 // Unbalanced RightLeft
 
-struct Node* rl(struct Node* root_node){
+Node* rl(Node* root_node){
   // Double Rotation
   root_node->right = rotateRight(root_node->right);
   root_node = rotateLeft(root_node);
@@ -241,7 +224,7 @@ struct Node* rl(struct Node* root_node){
 
 ///////////////////////////////////////////////////////
 
-int balanceFactor(struct Node* root_node){
+int balanceFactor(Node* root_node){
   if(root_node == NULL){
     // Empty tree or leaf node
     return 0;
@@ -254,7 +237,7 @@ int balanceFactor(struct Node* root_node){
 
 ///////////////////////////////////////////////////////
 
-void preorder(struct Node* root_node) {
+void preorder(Node* root_node) {
   //Base case to stop the recursion.
   if (root_node == NULL) {
     return;
@@ -267,7 +250,7 @@ void preorder(struct Node* root_node) {
 
 ///////////////////////////////////////////////////////
 
-void inorder(struct Node* root_node) {
+void inorder(Node* root_node) {
   //Base case to stop the recursion.
   if (root_node == NULL) {
     return;
@@ -280,7 +263,7 @@ void inorder(struct Node* root_node) {
 
 ///////////////////////////////////////////////////////
 
-void postorder(struct Node* root_node) {
+void postorder(Node* root_node) {
   //Base case to stop the recursion.
   if (root_node == NULL) {
     return;
@@ -293,7 +276,7 @@ void postorder(struct Node* root_node) {
 
 ///////////////////////////////////////////////////////
 
-struct Node* delete(struct Node* root_node,int key){
+Node* deleteNode(Node* root_node,int key){
   // First, we need to perform a standard BST deletion
   if (root_node == NULL) {
     // Empty tree
@@ -302,16 +285,16 @@ struct Node* delete(struct Node* root_node,int key){
   //If the value of the key we want to delete is less than the value of the current key on the root node,
   // we must look in the left subtree.
   if (key < root_node->key) {
-    root_node->left = delete(root_node->left,key);
+    root_node->left = deleteNode(root_node->left,key);
   }else if (key > root_node->key) {
     //If the value of the key we want to delete is greater than the value of the current key on the root node,
     // we must look in the right subtree.
-    root_node->right = delete(root_node->right,key);
+    root_node->right = deleteNode(root_node->right,key);
   }else{
     // root->key == key , we find the element
       // We must discover if node has children.
       if ((root_node->left == NULL) || (root_node->right == NULL)){
-        struct Node* temp = (root_node->left)? (root_node->left):(root_node->right);
+        Node* temp = (root_node->left)? (root_node->left):(root_node->right);
         // Syntax: (Condition)?true_value:false_value
         // temp helps to change the reference of the node to be deleted
         if (temp == NULL) {// NO child case
@@ -327,14 +310,14 @@ struct Node* delete(struct Node* root_node,int key){
         // by the rightmost element of the left subtree
         // or
         // by the leftmost element of the right subtree
-        struct Node *temp;
+        Node *temp;
         temp = root_node->left; // I choose the rightmost element of the left subtree
         while (temp->right != NULL) {
           temp = temp->right;
         }
         // copy the element to be repalced
         root_node->key = temp->key;
-        root_node->left = delete(root_node->left,temp->key);
+        root_node->left = deleteNode(root_node->left,temp->key);
       }
   }
   // If the tree has only one node
